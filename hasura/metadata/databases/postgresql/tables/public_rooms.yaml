@@ -1,0 +1,76 @@
+table:
+  name: rooms
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: admin_user_id
+array_relationships:
+  - name: room_profiles
+    using:
+      foreign_key_constraint_on:
+        column: room_id
+        table:
+          name: room_profiles
+          schema: public
+  - name: room_users
+    using:
+      foreign_key_constraint_on:
+        column: room_id
+        table:
+          name: room_user
+          schema: public
+  - name: user_profiles
+    using:
+      foreign_key_constraint_on:
+        column: room_id
+        table:
+          name: user_profiles
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      set:
+        admin_user_id: x-hasura-User-Id
+      columns:
+        - group_column
+        - group_row
+        - seat_column
+        - seat_row
+        - title
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - group_column
+        - group_row
+        - seat_column
+        - seat_row
+        - admin_user_id
+        - title
+        - created_at
+        - updated_at
+        - id
+      filter: {}
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - group_column
+        - group_row
+        - seat_column
+        - seat_row
+        - title
+      filter:
+        admin_user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+      set:
+        admin_user_id: x-hasura-User-Id
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        admin_user_id:
+          _eq: X-Hasura-User-Id
